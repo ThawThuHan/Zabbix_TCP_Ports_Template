@@ -1,0 +1,68 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 730ef0b168104e01bc69354413763243
+      name: Templates/Linux
+  templates:
+    - uuid: 61003e613b3b445da5020b6fd4c5ddcb
+      template: 'service monitoring by thawthuhan'
+      name: 'service monitoring by thawthuhan'
+      groups:
+        - name: Templates/Linux
+      items:
+        - uuid: 6cd4593d01a947bb88301fe2a3691452
+          name: 'Crond Job Status'
+          key: cron.job.status
+          triggers:
+            - uuid: 6532c8eea87240ef8404b8cf2e6ef45a
+              expression: 'last(/service monitoring by thawthuhan/cron.job.status)=0'
+              name: 'Crond Job Status'
+              priority: AVERAGE
+              description: 'There is no cron job running.'
+        - uuid: 57aac0d5292d4b34b2ee090e2fad0eb7
+          name: 'Java Application Job Status'
+          key: java.job.status
+          triggers:
+            - uuid: 59c6ec1f5c2a4a5c8a9ff91ae737ad1a
+              expression: 'last(/service monitoring by thawthuhan/java.job.status)=0'
+              name: 'Java Application Job Status'
+              priority: HIGH
+      discovery_rules:
+        - uuid: 1dd6f949ce304b60816d62966092d1fe
+          name: 'TCP Ports Discovery'
+          key: netstat.tcp.listen
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#PORT}'
+                value: '{$TCP.PORT.MATCHES}'
+                formulaid: A
+          item_prototypes:
+            - uuid: 69e272fd981949fba55923b8f1ff5807
+              name: 'TCP Port {#PORT}'
+              type: ZABBIX_ACTIVE
+              key: 'net.tcp.service[tcp,,{#PORT}]'
+              delay: 5m
+              trigger_prototypes:
+                - uuid: 63fa7ee2ffd043c18a5d9a6a1d7ffe0e
+                  expression: 'last(/service monitoring by thawthuhan/net.tcp.service[tcp,,{#PORT}])=0'
+                  name: 'Check TCP Connection on Port {$PORT}'
+                  priority: AVERAGE
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  var lld = [];
+                  const portsArray = value.trim().split(/\s+/).map(Number);
+                  const linelenght = portsArray.length
+                  
+                  for (i=0; i < linelenght; i++) {
+                    var row = {}
+                    row["{#PORT}"] = portsArray[i];
+                    lld.push(row)
+                  }
+                  // Convert the array to JSON
+                  const jsonData = JSON.stringify(lld);
+                  return jsonData;
+      macros:
+        - macro: '{$TCP.PORT.MATCHES}'
