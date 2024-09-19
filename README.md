@@ -2,9 +2,9 @@
 
 ## Macros used
 
-|Name|Description|Default|Type|
+|Name|Description|Value(Example)|Type|
 |----|-----------|-------|----|
-|{$TCP.PORT.MATCHES}|<p>-</p>|(80|443|22|3306)|Regex|
+|{$TCP.PORT.MATCHES}|<p>-</p>|(80\|443\|22\|3306)|Regex|
 
 
 ## Template links
@@ -22,6 +22,12 @@ There are no template links in this template.
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
 |TCP Port {#PORT}|check tcp connection with built-in net.tcp.service[tcp,,{#PORT}]|Zabbix Agent|net.tcp.service|
+
+## Zabbix Agent Configuration
+add following line in #zabbix-agentd.conf (if needed).
+'''sh
+UserParameter=netstat.tcp.listen,netstat -tln | grep -oP '(?<=([\:]{3})|([0-9]:))(?<!(::1:))(?<!(127.0.0.1:))[0-9]+'
+'''
 
 ## Contributing
 
