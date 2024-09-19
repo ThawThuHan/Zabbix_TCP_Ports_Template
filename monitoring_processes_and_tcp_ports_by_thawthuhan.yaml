@@ -5,8 +5,8 @@ zabbix_export:
       name: Templates/Linux
   templates:
     - uuid: 61003e613b3b445da5020b6fd4c5ddcb
-      template: 'service monitoring by thawthuhan'
-      name: 'service monitoring by thawthuhan'
+      template: 'processes and tcp ports monitoring by thawthuhan'
+      name: 'processes and tcp ports monitoring by thawthuhan'
       groups:
         - name: Templates/Linux
       items:
@@ -15,7 +15,7 @@ zabbix_export:
           key: cron.job.status
           triggers:
             - uuid: 6532c8eea87240ef8404b8cf2e6ef45a
-              expression: 'last(/service monitoring by thawthuhan/cron.job.status)=0'
+              expression: 'last(/processes and tcp ports monitoring by thawthuhan/cron.job.status)=0'
               name: 'Crond Job Status'
               priority: AVERAGE
               description: 'There is no cron job running.'
@@ -24,7 +24,7 @@ zabbix_export:
           key: java.job.status
           triggers:
             - uuid: 59c6ec1f5c2a4a5c8a9ff91ae737ad1a
-              expression: 'last(/service monitoring by thawthuhan/java.job.status)=0'
+              expression: 'last(/processes and tcp ports monitoring by thawthuhan/java.job.status)=0'
               name: 'Java Application Job Status'
               priority: HIGH
       discovery_rules:
@@ -45,7 +45,7 @@ zabbix_export:
               delay: 5m
               trigger_prototypes:
                 - uuid: 63fa7ee2ffd043c18a5d9a6a1d7ffe0e
-                  expression: 'last(/service monitoring by thawthuhan/net.tcp.service[tcp,,{#PORT}])=0'
+                  expression: 'last(/processes and tcp ports monitoring by thawthuhan/net.tcp.service[tcp,,{#PORT}])=0'
                   name: 'Check TCP Connection on Port {$PORT}'
                   priority: AVERAGE
           preprocessing:
