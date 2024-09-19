@@ -22,11 +22,23 @@ There are no template links in this template.
 |Name|Description|Type|Key and additional info|
 |----|-----------|----|----|
 |TCP Port {#PORT}|check tcp connection with built-in net.tcp.service[tcp,,{#PORT}]|Zabbix Agent|net.tcp.service|
+|Crond Job Status|check crond job processes|Zabbix Agent|cron.job.status|
+|Java Job Stats|check java job processes|Zabbix Agent|java.job.status|
 
 ## Zabbix Agent Configuration
-add following line in #zabbix-agentd.conf (if needed).
+add following line in #zabbix-agentd.conf (if needed) for Discovery.
 ```sh
 UserParameter=netstat.tcp.listen,netstat -tln | grep -oP '(?<=([\:]{3})|([0-9]:))(?<!(::1:))(?<!(127.0.0.1:))[0-9]+'
+```
+
+add following line in #zabbix-agentd.conf (if needed) for Crond.
+```sh
+UserParameter=cron.job.status,pgrep -c crond
+```
+
+add following line in #zabbix-agentd.conf (if needed) for Java.
+```sh
+UserParameter=java.job.status,pgrep -c crond
 ```
 
 ## Contributing
