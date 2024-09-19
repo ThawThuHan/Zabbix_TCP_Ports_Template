@@ -25,9 +25,9 @@ There are no template links in this template.
 
 ## Zabbix Agent Configuration
 add following line in #zabbix-agentd.conf (if needed).
-'''sh
+```sh
 UserParameter=netstat.tcp.listen,netstat -tln | grep -oP '(?<=([\:]{3})|([0-9]:))(?<!(::1:))(?<!(127.0.0.1:))[0-9]+'
-'''
+```
 
 ## Contributing
 
