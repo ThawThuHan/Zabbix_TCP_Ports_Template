@@ -27,8 +27,14 @@ There are no template links in this template.
 
 ## Zabbix Agent Configuration
 add following line in #zabbix-agentd.conf (if needed) for Discovery.
+### Linux
 ```sh
 UserParameter=netstat.tcp.listen,netstat -tln | grep -oP '(?<=([\:]{3})|([0-9]:))(?<!(::1:))(?<!(127.0.0.1:))[0-9]+'
+```
+
+### Windows
+```sh
+UserParameter=netstat.tcp.listen,netstat -anp tcp | FINDSTR LISTENING
 ```
 
 add following line in #zabbix-agentd.conf (if needed) for Crond.
