@@ -1,0 +1,53 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 730ef0b168104e01bc69354413763243
+      name: Templates/Linux
+  templates:
+    - uuid: 9fad88a04b00480a967c81a46dc38462
+      template: 'processes and tcp ports monitoring windows by thawthuhan'
+      name: 'processes and tcp ports monitoring windows by thawthuhan'
+      groups:
+        - name: Templates/Linux
+      discovery_rules:
+        - uuid: 3d7471a3daf34c5f8a0166a38e1ee6e7
+          name: 'TCP Ports Discovery'
+          key: netstat.tcp.listen
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#PORT}'
+                value: '{$TCP.PORT.MATCHES}'
+                formulaid: A
+          item_prototypes:
+            - uuid: fe92f2fa767a4b08964747644b82a0e9
+              name: 'TCP Port {#PORT}'
+              key: 'net.tcp.service[tcp,,{#PORT}]'
+              trigger_prototypes:
+                - uuid: 6ded921b28184a27ae4031ba3dd9734d
+                  expression: 'last(/processes and tcp ports monitoring windows by thawthuhan/net.tcp.service[tcp,,{#PORT}])=0'
+                  name: 'Check TCP Connection on Port {#PORT}'
+                  priority: AVERAGE
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  var lines = value.trim().split('\n');
+                  var uniquePorts = [];
+                  
+                  for (i = 0; i < lines.length; i++) {
+                    var line = lines[i];
+                    var parts = line.trim().split(/\s+/);
+                    var address = parts[1];
+                    // Check if the address is not 127.0.0.1
+                    if (address && !address.startsWith('127.0.0.1')) {
+                      var port = address.split(':')[1];
+                      if (port) {
+                        uniquePorts.push({ '{#PORT}': port });
+                      }
+                    }
+                  }
+                  
+                  return JSON.stringify(uniquePorts);
+      macros:
+        - macro: '{$TCP.PORT.MATCHES}'
