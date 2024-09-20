@@ -11,22 +11,22 @@ zabbix_export:
         - name: Templates/Linux
       discovery_rules:
         - uuid: 3d7471a3daf34c5f8a0166a38e1ee6e7
-          name: 'TCP Ports Discovery'
-          key: netstat.tcp.listen
+          name: 'Windows TCP Ports Discovery'
+          key: windows.netstat.tcp.listen
           delay: 1h
           filter:
             conditions:
-              - macro: '{#PORT}'
+              - macro: '{#WIN_PORT}'
                 value: '{$TCP.PORT.MATCHES}'
                 formulaid: A
           item_prototypes:
             - uuid: fe92f2fa767a4b08964747644b82a0e9
-              name: 'TCP Port {#PORT}'
-              key: 'net.tcp.service[tcp,,{#PORT}]'
+              name: 'Windows TCP Port {#WIN_PORT}'
+              key: 'net.tcp.service[tcp,,{#WIN_PORT}]'
               trigger_prototypes:
                 - uuid: 6ded921b28184a27ae4031ba3dd9734d
-                  expression: 'last(/processes and tcp ports monitoring windows by thawthuhan/net.tcp.service[tcp,,{#PORT}])=0'
-                  name: 'Check TCP Connection on Port {#PORT}'
+                  expression: 'last(/processes and tcp ports monitoring windows by thawthuhan/net.tcp.service[tcp,,{#WIN_PORT}])=0'
+                  name: 'Check Windows TCP Connection on Port {#WIN_PORT}'
                   priority: AVERAGE
           preprocessing:
             - type: JAVASCRIPT
@@ -43,7 +43,7 @@ zabbix_export:
                     if (address && !address.startsWith('127.0.0.1')) {
                       var port = address.split(':')[1];
                       if (port) {
-                        uniquePorts.push({ '{#PORT}': port });
+                        uniquePorts.push({ '{#WIN_PORT}': port });
                       }
                     }
                   }
