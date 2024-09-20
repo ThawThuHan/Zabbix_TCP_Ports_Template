@@ -38,7 +38,7 @@ UserParameter=cron.job.status,pgrep -c crond
 
 add following line in #zabbix-agentd.conf (if needed) for Java.
 ```sh
-UserParameter=java.job.status,pgrep -c crond
+UserParameter=java.job.status,pgrep -c java
 ```
 
 ## Contributing
