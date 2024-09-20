@@ -46,7 +46,7 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: 63fa7ee2ffd043c18a5d9a6a1d7ffe0e
                   expression: 'last(/processes and tcp ports monitoring by thawthuhan/net.tcp.service[tcp,,{#PORT}])=0'
-                  name: 'Check TCP Connection on Port {$PORT}'
+                  name: 'Check TCP Connection on Port {#PORT}'
                   priority: AVERAGE
           preprocessing:
             - type: JAVASCRIPT
