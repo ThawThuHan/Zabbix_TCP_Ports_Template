@@ -6,6 +6,7 @@
 |----|-----------|-------|----|
 |{$TCP.PORT.MATCHES}|<p>-</p>|(80\|443\|22\|3306)|Regex|
 
+if you don't set the value, Zabbix Server will discover all listening ports.
 
 ## Template links
 
@@ -34,7 +35,7 @@ UserParameter=netstat.tcp.listen,netstat -tln | grep -oP '(?<=([\:]{3})|([0-9]:)
 
 ### Windows
 ```sh
-UserParameter=netstat.tcp.listen,netstat -anp tcp | FINDSTR LISTENING
+UserParameter=windows.netstat.tcp.listen,netstat -anp tcp | FINDSTR LISTENING
 ```
 
 add following line in #zabbix-agentd.conf (if needed) for Crond.
