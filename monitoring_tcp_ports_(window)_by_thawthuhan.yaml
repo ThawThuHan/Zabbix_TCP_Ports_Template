@@ -26,8 +26,11 @@ zabbix_export:
               trigger_prototypes:
                 - uuid: 6ded921b28184a27ae4031ba3dd9734d
                   expression: 'last(/processes and tcp ports monitoring windows by thawthuhan/net.tcp.service[tcp,,{#WIN_PORT}])=0'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/processes and tcp ports monitoring windows by thawthuhan/net.tcp.service[tcp,,{#WIN_PORT}])=1'
                   name: 'Check Windows TCP Connection on Port {#WIN_PORT}'
                   priority: AVERAGE
+                  manual_close: 'YES'
           preprocessing:
             - type: JAVASCRIPT
               parameters:
