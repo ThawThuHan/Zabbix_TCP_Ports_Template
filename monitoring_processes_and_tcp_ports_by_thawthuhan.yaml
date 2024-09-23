@@ -40,7 +40,7 @@ zabbix_export:
           item_prototypes:
             - uuid: 69e272fd981949fba55923b8f1ff5807
               name: 'TCP Port {#PORT}'
-              type: ZABBIX_ACTIVE
+              #type: ZABBIX_ACTIVE
               key: 'net.tcp.service[tcp,,{#PORT}]'
               delay: 5m
               trigger_prototypes:
