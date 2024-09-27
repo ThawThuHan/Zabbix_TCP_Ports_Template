@@ -1,0 +1,48 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 730ef0b168104e01bc69354413763243
+      name: Templates/Linux
+  templates:
+    - uuid: 3fac45fba975483fb5af8ba806b5aee2
+      template: 'systemd services monitoring by thawthuhan'
+      name: 'systemd services monitoring by thawthuhan'
+      groups:
+        - name: Templates/Linux
+      discovery_rules:
+        - uuid: d281900f0d0f4008be4788c97f7862b9
+          name: 'Service Discovery'
+          key: check_services.all
+          delay: 1h
+          filter:
+            conditions:
+              - macro: '{#SERVICE_NAME}'
+                value: '^{$SERVICES}$'
+                formulaid: A
+          item_prototypes:
+            - uuid: 89a7240f955949fa8ebd2438c848e436
+              name: 'check service {#SERVICE_NAME}'
+              key: 'system.run[systemctl is-active {#SERVICE_NAME}]'
+              value_type: TEXT
+              trends: '0'
+              trigger_prototypes:
+                - uuid: e143c2e08b8646109597c46ae15d6ff3
+                  expression: 'last(/systemd services monitoring by thawthuhan/system.run[systemctl is-active {#SERVICE_NAME}])="inactive"'
+                  recovery_mode: RECOVERY_EXPRESSION
+                  recovery_expression: 'last(/systemd services monitoring by thawthuhan/system.run[systemctl is-active {#SERVICE_NAME}])="active"'
+                  name: 'check status on service {#SERVICE_NAME}'
+                  priority: WARNING
+                  description: '{#SERVICE_NAME} service is not active.'
+          preprocessing:
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  const items = value.trim().split('\n')
+                  var new_items = [];
+                  for (i=0; i < items.length; i++) {
+                    var item = {}
+                    item["{#SERVICE_NAME}"] = items[i]
+                    new_items.push(item)
+                  }
+                  
+                  return JSON.stringify(new_items)
